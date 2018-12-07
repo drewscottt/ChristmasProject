@@ -80,12 +80,13 @@ function drawSnow(){
   }   
   
   //Accumulation
-  var maxHeight = 60,
-      accumRate = 15;
-      accumulation = accumAmount/accumRate;
+  var maxHeight = 200,
+      initHeight = 20,
+      accumRate = 30;
+      accumulation = (accumAmount/accumRate) + initHeight;
 
   if(accumulation <= maxHeight){
-    ctx.rect(0, canvas.height-accumulation, canvas.width, accumulation);
+    ctx.rect(0, canvas.height-accumulation-initHeight, canvas.width, accumulation+initHeight);
     ctx.fillStyle = 'white';
     ctx.fill();
   }else{
