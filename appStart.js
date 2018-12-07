@@ -79,22 +79,11 @@ function drawSnow(){
     moveSnow(i);
   }   
   
-  //Accumulation
-  var maxHeight = 200,
-      initHeight = 20,
-      accumRate = 30;
-      accumulation = (accumAmount/accumRate) + initHeight;
+  accumulate();
+  gnome('red', canvas.width/2);
+  gnome('green', canvas.width/1.75);
+  gnome('blue', canvas.width/2.25);
 
-  if(accumulation <= maxHeight){
-    ctx.rect(0, canvas.height-accumulation-initHeight, canvas.width, accumulation+initHeight);
-    ctx.fillStyle = 'white';
-    ctx.fill();
-  }else{
-    ctx.rect(0, canvas.height-maxHeight, canvas.width, maxHeight);
-    ctx.fillStyle = 'white';
-    ctx.fill();
-  }
-  
   //The command below is needed to animate the snow
   window.requestAnimationFrame(drawSnow); 
 }
@@ -117,6 +106,45 @@ function moveSnow(index){
   }
 }
 
+//Accumulation
+function accumulate(){
+  var initHeight = 20,
+      maxHeight = 150,
+      accumRate = 25,
+      accumulation = (accumAmount/accumRate);
+
+  if(accumulation <= maxHeight){
+    ctx.beginPath();
+    ctx.rect(0, canvas.height-initHeight-accumulation, canvas.width, initHeight+accumulation);
+    ctx.closePath();
+    ctx.fillStyle = 'white';
+    ctx.fill();
+  }else{
+    ctx.beginPath();
+    ctx.rect(0, canvas.height-initHeight-maxHeight, canvas.width, maxHeight+initHeight);
+    ctx.closePath();
+    ctx.fillStyle = 'white';
+    ctx.fill();
+  } 
+}
+
+function gnome(color, x){
+  this.color = color;
+  this.x = x;
+
+  ctx.beginPath();
+  ctx.arc(x, canvas.height-140, 20, 0, Math.PI*2, true);
+  ctx.closePath();
+  ctx.fillStyle = 'tan';
+  ctx.fill();
+
+  //Body  
+  ctx.beginPath();
+  ctx.arc(x, canvas.height-100, 30, 0, Math.PI*2, true);
+  ctx.closePath();
+  ctx.fillStyle = this.color;
+  ctx.fill();
+}
 /**
  * TODO: Complete the drawScene function below.
  * Inside this function, call the additional functions needed to
@@ -128,3 +156,4 @@ function drawScene(){
 
 drawScene();
 
+console.log(canvas.width);
