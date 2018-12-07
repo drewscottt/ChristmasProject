@@ -132,6 +132,16 @@ function gnome(color, x){
   this.color = color;
   this.x = x;
 
+  //Hat
+  ctx.beginPath();
+  ctx.moveTo();
+  ctx.lineTo()
+  ctx.lineTo();
+  ctx.closePath();
+  ctx.fillStyle = this.color;
+  ctx.fill();
+
+  //Head
   ctx.beginPath();
   ctx.arc(x, canvas.height-140, 20, 0, Math.PI*2, true);
   ctx.closePath();
