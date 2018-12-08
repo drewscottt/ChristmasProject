@@ -79,10 +79,13 @@ function drawSnow(){
     moveSnow(i);
   }   
   
+  elf('red', 440, 247);
+  elf('green', 505, 247);
+  elf('blue', 570, 247);
+
+  sleigh();
+
   accumulate();
-  gnome('red', canvas.width/2);
-  gnome('green', canvas.width/1.75);
-  gnome('blue', canvas.width/2.25);
 
   //The command below is needed to animate the snow
   window.requestAnimationFrame(drawSnow); 
@@ -106,7 +109,6 @@ function moveSnow(index){
   }
 }
 
-//Accumulation
 function accumulate(){
   var initHeight = 20,
       maxHeight = 150,
@@ -125,36 +127,105 @@ function accumulate(){
     ctx.closePath();
     ctx.fillStyle = 'white';
     ctx.fill();
-  } 
+  }
 }
 
-function gnome(color, x){
+function sleigh(){
+  //Body
+  ctx.beginPath();
+  ctx.rect(400, 120, 300, 80);
+  ctx.closePath();
+  ctx.fillStyle = 'red';
+  ctx.fill();
+
+  //Rungs
+  ctx.beginPath();
+  ctx.rect(450, 200, 10, 15);
+  ctx.rect(650, 200, 10, 15);
+  ctx.rect(400, 210, 300, 10);
+  ctx.rect(400, 205, 10, 5);
+  ctx.rect(690, 205, 10, 5);
+  ctx.closePath();
+  ctx.fillStyle = 'gold';
+  ctx.fill();
+}
+
+function elf(color, x, y){
   this.color = color;
   this.x = x;
-
-  //Hat
+  this.y = y;
+  
+  //Body  
   ctx.beginPath();
-  ctx.moveTo();
-  ctx.lineTo()
-  ctx.lineTo();
+  ctx.arc(x, y-100, 30, 0, Math.PI*2, true);
   ctx.closePath();
-  ctx.fillStyle = this.color;
+  ctx.fillStyle = color;
   ctx.fill();
 
   //Head
   ctx.beginPath();
-  ctx.arc(x, canvas.height-140, 20, 0, Math.PI*2, true);
+  ctx.arc(x, y-140, 20, 0, Math.PI*2, true);
   ctx.closePath();
   ctx.fillStyle = 'tan';
   ctx.fill();
 
-  //Body  
+  //Eyes
   ctx.beginPath();
-  ctx.arc(x, canvas.height-100, 30, 0, Math.PI*2, true);
+  ctx.arc(x-7, y-143, 1.5, 0, Math.PI*2, true);
+  ctx.arc(x+7, y-143, 1.5, 0, Math.PI*2, true);
   ctx.closePath();
-  ctx.fillStyle = this.color;
+  ctx.fillStyle = 'black';
   ctx.fill();
+
+  //Mouth
+  ctx.beginPath();
+  ctx.arc(x, y-135, 6, 0, Math.PI, false);
+  ctx.closePath();
+  ctx.fillStyle = 'black';
+  ctx.fill();
+
+  //Hat
+  ctx.beginPath();
+  ctx.moveTo(x+17, y-150);
+  ctx.lineTo(x-17, y-150);
+  ctx.lineTo(x, y-180);
+  ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.fill();
+
+  //Legs
+  ctx.beginPath();
+  ctx.rect(x-19, y-80, 16, 20);
+  ctx.rect(x+4, y-80, 16, 20);
+  ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.fill();
+
+  //Shoes
+  ctx.beginPath();
+  ctx.rect(x-19, y-68, 16, 8);
+  ctx.arc(x-19, y-63.9, 4, Math.PI*.5, Math.PI*1.5, false);
+  ctx.rect(x+4, y-68, 16, 8);
+  ctx.closePath();
+  ctx.fillStyle = 'black';
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(x+19, y-64, 4, Math.PI*.5, Math.PI*1.5, true);
+  ctx.closePath();
+  ctx.fillStyle = 'black';
+  ctx.fill();
+
+  //Arms
+  ctx.beginPath();
+  ctx.rotate(20*Math.PI/180);
+  ctx.rect(x-200, 300, 25, 10);
+  ctx.closePath();
+  ctx.fillStyle = color;
+  //ctx.fill();
+  ctx.rotate(-20*Math.PI/180);
 }
+
 /**
  * TODO: Complete the drawScene function below.
  * Inside this function, call the additional functions needed to
@@ -165,5 +236,3 @@ function drawScene(){
 }
 
 drawScene();
-
-console.log(canvas.width);
