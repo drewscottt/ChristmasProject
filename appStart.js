@@ -10,17 +10,18 @@
 
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
+
 var snowArray = [];
+var elvesArray = [];
+var mySleigh;
+
 var accumAmount = 0;
 
 canvas.height = window.innerHeight;
 canvas.width = window.innerWidth;
 
-/**
- * Constructor for a single snow flake 
- */
-
-function snowFlake(x,y,r) {
+//Snowflake constructor
+function snowFlake(x, y, r) {
   this.x = x;
   this.y = y;
   this.r = r;
@@ -33,19 +34,117 @@ function snowFlake(x,y,r) {
     ctx.fill();
   }
 }
-/** 
- * TODO: Complete the function below to make lots of snow.   
- * Create each snowflake using the snowFlake constructor and 
- * populate the snowArray with your snowflakes
- * Each snow flake must be of random sizes and populate
- * the screen randomly in the y and x directions
- * Feel free to add a parameter to specify the amount of snow
- */
 
+//Elf constructor
+function elf(color, x, y){
+  this.color = color;
+  this.x = x;
+  this.y = y;
+  
+  this.draw = function(){
+    //Body  
+    ctx.beginPath();
+    ctx.arc(this.x, this.y-100, 30, 0, Math.PI*2, true);
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+
+    //Head
+    ctx.beginPath();
+    ctx.arc(this.x, this.y-140, 20, 0, Math.PI*2, true);
+    ctx.closePath();
+    ctx.fillStyle = 'tan';
+    ctx.fill();
+
+    //Eyes
+    ctx.beginPath();
+    ctx.arc(this.x-7, this.y-143, 1.5, 0, Math.PI*2, true);
+    ctx.arc(this.x+7, this.y-143, 1.5, 0, Math.PI*2, true);
+    ctx.closePath();
+    ctx.fillStyle = 'black';
+    ctx.fill();
+
+    //Mouth
+    ctx.beginPath();
+    ctx.arc(this.x, this.y-135, 6, 0, Math.PI, false);
+    ctx.closePath();
+    ctx.fillStyle = 'black';
+    ctx.fill();
+
+    //Hat
+    ctx.beginPath();
+    ctx.moveTo(this.x+17, this.y-150);
+    ctx.lineTo(this.x-17, this.y-150);
+    ctx.lineTo(this.x, this.y-180);
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+
+    //Legs
+    ctx.beginPath();
+    ctx.rect(this.x-19, this.y-80, 16, 20);
+    ctx.rect(this.x+4, this.y-80, 16, 20);
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+
+    //Shoes
+    ctx.beginPath();
+    ctx.rect(this.x-19, this.y-68, 16, 8);
+    ctx.arc(this.x-19, this.y-63.9, 4, Math.PI*.5, Math.PI*1.5, false);
+    ctx.rect(this.x+4, this.y-68, 16, 8);
+    ctx.closePath();
+    ctx.fillStyle = 'black';
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(this.x+19, this.y-64, 4, Math.PI*.5, Math.PI*1.5, true);
+    ctx.closePath();
+    ctx.fillStyle = 'black';
+    ctx.fill();
+
+    //Arms
+    ctx.beginPath();
+    ctx.rotate(20*Math.PI/180);
+    ctx.rect(this.x-200, 300, 25, 10);
+    ctx.closePath();
+    ctx.fillStyle = color;
+    //ctx.fill();
+    ctx.rotate(-20*Math.PI/180);
+    
+  }
+}
+
+//Sleigh constructor
+function sleigh(x, y){
+  this.x = x;
+  this.y = y;
+  
+  this.draw = function(){
+    //Body
+    ctx.beginPath();
+    ctx.rect(this.x, this.y, 300, 80);
+    ctx.closePath();
+    ctx.fillStyle = 'red';
+    ctx.fill();
+
+    //Rungs
+    ctx.beginPath();
+    ctx.rect(this.x+50, this.y+80, 10, 15);
+    ctx.rect(this.x+250, this.y+80, 10, 15);
+    ctx.rect(this.x, this.y+90, 300, 10);
+    ctx.rect(this.x, this.y+85, 10, 5);
+    ctx.rect(this.x+290, this.y+85, 10, 5);
+    ctx.closePath();
+    ctx.fillStyle = 'gold';
+    ctx.fill();
+  }
+}
+
+//Creates array of flakes
 function snow(amount){
   var x, y, r;
 
-  //Creates array of flakes
   for (var i = 0; i < amount; i++){
     x = Math.random()*canvas.width;
     y = Math.random()*canvas.height;
@@ -53,48 +152,49 @@ function snow(amount){
 
     snowArray[i] = new snowFlake(x,y,r);
   }
-
-  drawSnow();
 }  
 
-/**
- * TODO:  Make the snow appear randomly appear on the screen and move 
- * in a verticle direction add an additional variable to account for wind
- */
+//Draws and moves elves
+function moveElves(){
+  for(var i = 0; i < elvesArray.length; i++){
+    if(elvesArray[i].x > 120+(120*i) && elvesArray[i].y < canvas.height+50){
+      elvesArray[i].y+=2;
+    }
 
+    if(elvesArray[i].y < canvas.height+50){
+      elvesArray[i].x+=2;
+    }
+
+    if(i = 1){
+      
+    }
+    elvesArray[i].draw();
+  }
+}
+
+//Moves snow down and left, scaled by size
 function drawSnow(){
-  //The command below is needed to clear the screen between each movement
-  ctx.clearRect(0, 0, window.innerWidth, window.innerHeight); 
-  
-  //Moves flakes down and left, scaled by size
-  var flake;
+  var flake,
+      windSpeed = .25;
   for (var i = 0; i < snowArray.length; i++){
     flake = snowArray[i];
 
-    flake.x -= flake.r/4;
+    flake.x -= flake.r*(windSpeed);
     flake.y += flake.r/4;
     
     flake.draw();
 
     moveSnow(i);
-  }   
-  
-  elf('red', 440, 247);
-  elf('green', 505, 247);
-  elf('blue', 570, 247);
-
-  sleigh();
-
-  accumulate();
-
-  //The command below is needed to animate the snow
-  window.requestAnimationFrame(drawSnow); 
+  }    
 }
 
-/**
- * TODO: Complete the function below to move each snow flake to the 
- * top of the screen once it has reached the bottom.
- */
+//Draws sleigh
+function drawSleigh(){
+  mySleigh.x+=2;
+  mySleigh.draw();
+}
+
+//Moves snow back on screen once it exits
 function moveSnow(index){
   //Moves flakes to the top if they exit bottom
   if (snowArray[index].y >= canvas.height){
@@ -109,10 +209,11 @@ function moveSnow(index){
   }
 }
 
+//Adds snow to bottom of screen when snow exits bottom
 function accumulate(){
   var initHeight = 20,
       maxHeight = 150,
-      accumRate = 25,
+      accumRate = 9, //Decrease for faster accumulation
       accumulation = (accumAmount/accumRate);
 
   if(accumulation <= maxHeight){
@@ -130,109 +231,29 @@ function accumulate(){
   }
 }
 
-function sleigh(){
-  //Body
-  ctx.beginPath();
-  ctx.rect(400, 120, 300, 80);
-  ctx.closePath();
-  ctx.fillStyle = 'red';
-  ctx.fill();
-
-  //Rungs
-  ctx.beginPath();
-  ctx.rect(450, 200, 10, 15);
-  ctx.rect(650, 200, 10, 15);
-  ctx.rect(400, 210, 300, 10);
-  ctx.rect(400, 205, 10, 5);
-  ctx.rect(690, 205, 10, 5);
-  ctx.closePath();
-  ctx.fillStyle = 'gold';
-  ctx.fill();
-}
-
-function elf(color, x, y){
-  this.color = color;
-  this.x = x;
-  this.y = y;
-  
-  //Body  
-  ctx.beginPath();
-  ctx.arc(x, y-100, 30, 0, Math.PI*2, true);
-  ctx.closePath();
-  ctx.fillStyle = color;
-  ctx.fill();
-
-  //Head
-  ctx.beginPath();
-  ctx.arc(x, y-140, 20, 0, Math.PI*2, true);
-  ctx.closePath();
-  ctx.fillStyle = 'tan';
-  ctx.fill();
-
-  //Eyes
-  ctx.beginPath();
-  ctx.arc(x-7, y-143, 1.5, 0, Math.PI*2, true);
-  ctx.arc(x+7, y-143, 1.5, 0, Math.PI*2, true);
-  ctx.closePath();
-  ctx.fillStyle = 'black';
-  ctx.fill();
-
-  //Mouth
-  ctx.beginPath();
-  ctx.arc(x, y-135, 6, 0, Math.PI, false);
-  ctx.closePath();
-  ctx.fillStyle = 'black';
-  ctx.fill();
-
-  //Hat
-  ctx.beginPath();
-  ctx.moveTo(x+17, y-150);
-  ctx.lineTo(x-17, y-150);
-  ctx.lineTo(x, y-180);
-  ctx.closePath();
-  ctx.fillStyle = color;
-  ctx.fill();
-
-  //Legs
-  ctx.beginPath();
-  ctx.rect(x-19, y-80, 16, 20);
-  ctx.rect(x+4, y-80, 16, 20);
-  ctx.closePath();
-  ctx.fillStyle = color;
-  ctx.fill();
-
-  //Shoes
-  ctx.beginPath();
-  ctx.rect(x-19, y-68, 16, 8);
-  ctx.arc(x-19, y-63.9, 4, Math.PI*.5, Math.PI*1.5, false);
-  ctx.rect(x+4, y-68, 16, 8);
-  ctx.closePath();
-  ctx.fillStyle = 'black';
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(x+19, y-64, 4, Math.PI*.5, Math.PI*1.5, true);
-  ctx.closePath();
-  ctx.fillStyle = 'black';
-  ctx.fill();
-
-  //Arms
-  ctx.beginPath();
-  ctx.rotate(20*Math.PI/180);
-  ctx.rect(x-200, 300, 25, 10);
-  ctx.closePath();
-  ctx.fillStyle = color;
-  //ctx.fill();
-  ctx.rotate(-20*Math.PI/180);
-}
-
-/**
- * TODO: Complete the drawScene function below.
- * Inside this function, call the additional functions needed to
- * complete your scene
- */
+//Draws scene
 function drawScene(){
-  snow(100);
+  //Clears screen  
+  ctx.clearRect(0, 0, window.innerWidth, window.innerHeight); 
+
+  drawSnow();
+  moveElves();
+  drawSleigh();
+  accumulate();
+
+  //Animates screen
+  window.requestAnimationFrame(drawScene); 
 }
 
+//Creates sleigh and 3 elf objects
+var xS = -330,
+    yS = 120;
+
+elvesArray[0] = new elf('red', xS+40, yS+127);
+elvesArray[1] = new elf('green', xS+105, yS+127);
+elvesArray[2] = new elf('blue', xS+170, yS+127);
+mySleigh = new sleigh(xS, yS);
+
+//Draws all elements
+snow(100);
 drawScene();
