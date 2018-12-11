@@ -14,8 +14,13 @@ var ctx = canvas.getContext('2d');
 var snowArray = [];
 var elvesArray = [];
 var mySleigh;
+var cloudArray = [];
 
-var accumAmount = 0;
+var accumAmount = 0,
+    accumulation = 0,
+    maxHeight = 140;
+
+var counter = 0;
 
 canvas.height = window.innerHeight;
 canvas.width = window.innerWidth;
@@ -165,9 +170,6 @@ function moveElves(){
       elvesArray[i].x+=2;
     }
 
-    if(i = 1){
-      
-    }
     elvesArray[i].draw();
   }
 }
@@ -212,9 +214,9 @@ function moveSnow(index){
 //Adds snow to bottom of screen when snow exits bottom
 function accumulate(){
   var initHeight = 20,
-      maxHeight = 150,
-      accumRate = 9, //Decrease for faster accumulation
-      accumulation = (accumAmount/accumRate);
+      accumRate = 3; //Decrease for faster accumulation
+    
+  accumulation = accumAmount/accumRate;
 
   if(accumulation <= maxHeight){
     ctx.beginPath();
@@ -231,29 +233,130 @@ function accumulate(){
   }
 }
 
+//Sets background color
+function background(color){
+  
+  ctx.beginPath();
+  ctx.rect(0, 0, canvas.width, canvas.height);
+  ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.fill();
+}
+
+//Counts time in between scences
+function next(){
+  counter++;
+}
+
+//Draws sun
+function sun(){
+  ctx.beginPath();
+  ctx.arc(150, 110, 75, 0, Math.PI*2, true);
+  ctx.closePath();
+  ctx.fillStyle = 'yellow';
+  ctx.fill();
+}
+
+//Cloud constructor
+function cloud(x, y){
+  this.x = x;
+  this.y = y;
+  
+  this.draw = function(){
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, 50, 0, Math.PI, true);
+    ctx.arc(this.x+68, this.y, 50, 0, Math.PI, true);
+    ctx.arc(this.x+34, this.y-35, 50, 0, Math.PI, true);
+    ctx.closePath();
+    ctx.fillStyle = 'white';
+    ctx.fill();
+  }
+}
+
+//Draws and moves clouds
+function drawCloud(){
+  for(var i = 0; i < cloudArray.length; i++){
+    cloudArray[i].x+=.2;
+    cloudArray[i].draw();
+
+    if(cloudArray[i].x >= canvas.width+100){
+      cloudArray[i].x = -110;
+    }
+  }
+}
+
+//Draws grass and gravestones
+function ground(){
+  //Grass
+  ctx.beginPath();
+  ctx.rect(0, canvas.height-20, canvas.width, 20);
+  ctx.closePath();
+  ctx.fillStyle = 'green';
+  ctx.fill();
+
+  gravestone(520);
+  gravestone(655);
+  gravestone(790);
+}
+
+//Gravestone constructor
+function gravestone(x){
+  this.x = x;
+  
+  ctx.beginPath();
+  ctx.rect(this.x, canvas.height-95, 75, 75);
+  ctx.arc(this.x+37.5, canvas.height-95, 37.5, 0, Math.PI, true);
+  ctx.closePath();
+  ctx.fillStyle = 'gray';
+  ctx.fill();
+}
+
 //Draws scene
 function drawScene(){
   //Clears screen  
-  ctx.clearRect(0, 0, window.innerWidth, window.innerHeight); 
+  ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
-  drawSnow();
-  moveElves();
-  drawSleigh();
-  accumulate();
+  if(accumulation <= maxHeight){
+    background('rgb(158, 206, 211)');
+    
+    drawSnow();
+    moveElves();
+    drawSleigh();
+    accumulate();
+  }else if(counter <= 50){
+    background('black');
 
+    next();
+  }else{
+    background('rgb(158, 206, 211)');
+
+    sun();
+    drawCloud();
+    ground();
+  }
+  
   //Animates screen
   window.requestAnimationFrame(drawScene); 
 }
 
-//Creates sleigh and 3 elf objects
-var xS = -330,
-    yS = 120;
-
-elvesArray[0] = new elf('red', xS+40, yS+127);
-elvesArray[1] = new elf('green', xS+105, yS+127);
-elvesArray[2] = new elf('blue', xS+170, yS+127);
-mySleigh = new sleigh(xS, yS);
-
-//Draws all elements
+//Creates sleigh, 3 elves, and 100 snow flakes
 snow(100);
+
+var xSleigh = -330,
+    ySleigh = 120;
+
+elvesArray[0] = new elf('red', xSleigh+40, ySleigh+127);
+elvesArray[1] = new elf('green', xSleigh+105, ySleigh+127);
+elvesArray[2] = new elf('blue', xSleigh+170, ySleigh+127);
+
+mySleigh = new sleigh(xSleigh, ySleigh);
+
+//Creates cloud
+var xCloud = 400,
+    yCloud = 210;
+
+cloudArray[0] = new cloud(xCloud, yCloud);
+cloudArray[1] = new cloud(xCloud+550, yCloud-40);
+cloudArray[2] = new cloud(xCloud-600, yCloud-60);
+
 drawScene();
