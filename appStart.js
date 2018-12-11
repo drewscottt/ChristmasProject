@@ -18,7 +18,7 @@ var cloudArray = [];
 
 var accumAmount = 0,
     accumulation = 0,
-    maxHeight = 140;
+    maxHeight = 150;
 
 var counter = 0;
 
@@ -162,11 +162,11 @@ function snow(amount){
 //Draws and moves elves
 function moveElves(){
   for(var i = 0; i < elvesArray.length; i++){
-    if(elvesArray[i].x > 120+(120*i) && elvesArray[i].y < canvas.height+50){
+    if(elvesArray[i].x > 120+(120*i) && elvesArray[i].y < canvas.height+40){
       elvesArray[i].y+=2;
     }
 
-    if(elvesArray[i].y < canvas.height+50){
+    if(elvesArray[i].y < canvas.height+40){
       elvesArray[i].x+=2;
     }
 
@@ -214,7 +214,7 @@ function moveSnow(index){
 //Adds snow to bottom of screen when snow exits bottom
 function accumulate(){
   var initHeight = 20,
-      accumRate = 3; //Decrease for faster accumulation
+      accumRate = 2.5; //Decrease for faster accumulation
     
   accumulation = accumAmount/accumRate;
 
@@ -243,8 +243,12 @@ function background(color){
   ctx.fill();
 }
 
-//Counts time in between scences
-function next(){
+//Displays words in between scenes
+function aFewMonthsLater(){
+  ctx.font = '75px Arapey';
+  ctx.fillStyle = 'white';
+  ctx.fillText('A few months later...', 400, 350);
+  
   counter++;
 }
 
@@ -294,14 +298,15 @@ function ground(){
   ctx.fillStyle = 'green';
   ctx.fill();
 
-  gravestone(520);
-  gravestone(655);
-  gravestone(790);
+  gravestone(520, 'Julien S.');
+  gravestone(655, 'Dylan H.');
+  gravestone(790, 'Caleb S.');
 }
 
 //Gravestone constructor
-function gravestone(x){
+function gravestone(x, name){
   this.x = x;
+  this.name = name;
   
   ctx.beginPath();
   ctx.rect(this.x, canvas.height-95, 75, 75);
@@ -309,7 +314,67 @@ function gravestone(x){
   ctx.closePath();
   ctx.fillStyle = 'gray';
   ctx.fill();
+
+  ctx.font = '20px Sanchez';
+  ctx.fillStyle = 'black';
+  ctx.fillText('R.I.P', x+17, canvas.height-88);
+
+  ctx.font = '15px Sanchez';
+  ctx.fillText('12/25/18', x+7, canvas.height-71);
+
+  ctx.font = '17px Sanchez'
+  ctx.fillText(this.name, x+4.5, canvas.height-45);
 }
+
+//Elves say "Merry Christmas"
+function xmas(){
+  //Speech bubble
+  ctx.beginPath();
+  ctx.rect(550, canvas.height-213, 300, 45);
+  ctx.arc(550, canvas.height-190, 22.5, Math.PI*.5, Math.PI*1.5, false);
+  ctx.closePath();
+  ctx.fillStyle = 'white';
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(850, canvas.height-190, 22.5, Math.PI*.5, Math.PI*1.5, true);
+  ctx.closePath();
+  ctx.fillStyle = 'white';
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.moveTo(580, canvas.height-170);
+  ctx.lineTo(585, canvas.height-125);
+  ctx.lineTo(595, canvas.height-170);
+  ctx.closePath();
+  ctx.fillStyle = 'white';
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.moveTo(795, canvas.height-170);
+  ctx.lineTo(790, canvas.height-125);
+  ctx.lineTo(780, canvas.height-170);
+  ctx.closePath();
+  ctx.fillStyle = 'white';
+  ctx.fill();
+
+  //Text
+  ctx.font = '30px Courgette';
+  ctx.fillStyle = 'red';
+  ctx.fillText('Merry Christmas!', 580, canvas.height-180);
+}
+
+//Fonts
+WebFontConfig = {
+  google:{ families: ['Courgette', 'Arapey', 'Sanchez'] },
+  active: function(){start();},
+};
+(function(){
+  var wf = document.createElement("script");
+  wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1.5.10/webfont.js';
+  wf.async = 'true';
+  document.head.appendChild(wf);
+})();
 
 //Draws scene
 function drawScene(){
@@ -323,10 +388,14 @@ function drawScene(){
     moveElves();
     drawSleigh();
     accumulate();
-  }else if(counter <= 50){
+    
+    if(elvesArray[2].y >= canvas.height+40){
+      xmas();
+    }
+  }else if(counter <= 150){
     background('black');
 
-    next();
+    aFewMonthsLater();
   }else{
     background('rgb(158, 206, 211)');
 
