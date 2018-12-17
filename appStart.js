@@ -49,74 +49,99 @@ function elf(color, x, y){
   this.draw = function(){
     //Body  
     ctx.beginPath();
-    ctx.arc(this.x, this.y-100, 30, 0, Math.PI*2, true);
+    ctx.arc(this.x, this.y-36, 30, 0, Math.PI*2, true);
     ctx.closePath();
-    ctx.fillStyle = color;
+    ctx.fillStyle = this.color;
     ctx.fill();
 
     //Head
     ctx.beginPath();
-    ctx.arc(this.x, this.y-140, 20, 0, Math.PI*2, true);
+    ctx.arc(this.x, this.y-76, 20, 0, Math.PI*2, true);
     ctx.closePath();
     ctx.fillStyle = 'tan';
     ctx.fill();
 
     //Eyes
     ctx.beginPath();
-    ctx.arc(this.x-7, this.y-143, 1.5, 0, Math.PI*2, true);
-    ctx.arc(this.x+7, this.y-143, 1.5, 0, Math.PI*2, true);
+    ctx.arc(this.x-7, this.y-79, 1.5, 0, Math.PI*2, true);
+    ctx.arc(this.x+7, this.y-79, 1.5, 0, Math.PI*2, true);
     ctx.closePath();
     ctx.fillStyle = 'black';
     ctx.fill();
 
     //Mouth
     ctx.beginPath();
-    ctx.arc(this.x, this.y-135, 6, 0, Math.PI, false);
+    ctx.arc(this.x, this.y-71, 6, 0, Math.PI, false);
     ctx.closePath();
     ctx.fillStyle = 'black';
     ctx.fill();
 
     //Hat
     ctx.beginPath();
-    ctx.moveTo(this.x+17, this.y-150);
-    ctx.lineTo(this.x-17, this.y-150);
-    ctx.lineTo(this.x, this.y-180);
+    ctx.moveTo(this.x+17, this.y-86);
+    ctx.lineTo(this.x-17, this.y-86);
+    ctx.lineTo(this.x, this.y-116);
     ctx.closePath();
     ctx.fillStyle = color;
     ctx.fill();
 
     //Legs
     ctx.beginPath();
-    ctx.rect(this.x-19, this.y-80, 16, 20);
-    ctx.rect(this.x+4, this.y-80, 16, 20);
+    ctx.rect(this.x-19, this.y-16, 16, 20);
+    ctx.rect(this.x+4, this.y-16, 16, 20);
     ctx.closePath();
-    ctx.fillStyle = color;
+    ctx.fillStyle = this.color;
     ctx.fill();
 
     //Shoes
     ctx.beginPath();
-    ctx.rect(this.x-19, this.y-68, 16, 8);
-    ctx.arc(this.x-19, this.y-63.9, 4, Math.PI*.5, Math.PI*1.5, false);
-    ctx.rect(this.x+4, this.y-68, 16, 8);
+    ctx.rect(this.x-19, this.y-4, 16, 8);
+    ctx.arc(this.x-19, this.y+.1, 4, Math.PI*.5, Math.PI*1.5, false);
+    ctx.rect(this.x+4, this.y-4, 16, 8);
     ctx.closePath();
     ctx.fillStyle = 'black';
     ctx.fill();
 
     ctx.beginPath();
-    ctx.arc(this.x+19, this.y-64, 4, Math.PI*.5, Math.PI*1.5, true);
+    ctx.arc(this.x+19, this.y, 4, Math.PI*.5, Math.PI*1.5, true);
     ctx.closePath();
     ctx.fillStyle = 'black';
+    ctx.fill();
+
+    ctx.save();
+
+    //Hands
+    ctx.beginPath();
+    ctx.arc(this.x-38, this.y-28, 7.6, 0, Math.PI*2, true);
+    ctx.arc(this.x+38, this.y-28, 7.6, 0, Math.PI*2, true)
+    ctx.closePath();
+    ctx.fillStyle = 'tan';
     ctx.fill();
 
     //Arms
+    ctx.translate(this.x-20, this.y-56);
+    ctx.rotate(Math.PI/4);
+
     ctx.beginPath();
-    ctx.rotate(20*Math.PI/180);
-    ctx.rect(this.x-200, 300, 25, 10);
+    ctx.rect(0, 0, 15, 32);
     ctx.closePath();
-    ctx.fillStyle = color;
-    //ctx.fill();
-    ctx.rotate(-20*Math.PI/180);
-    
+    ctx.fillStyle = this.color;
+    ctx.fill();
+
+    ctx.restore();
+    ctx.save();
+
+    ctx.translate(this.x+10, this.y-46);
+    ctx.rotate(-Math.PI/4);
+
+    ctx.beginPath();
+    ctx.rect(0, 0, 15, 32);
+    ctx.closePath();
+    ctx.fillStyle = this.color;
+    ctx.fill();
+
+    ctx.restore();
+    ctx.save();
   }
 }
 
@@ -128,18 +153,18 @@ function sleigh(x, y){
   this.draw = function(){
     //Body
     ctx.beginPath();
-    ctx.rect(this.x, this.y, 300, 80);
+    ctx.rect(this.x, this.y, 305, 80);
     ctx.closePath();
     ctx.fillStyle = 'red';
     ctx.fill();
 
     //Rungs
     ctx.beginPath();
-    ctx.rect(this.x+50, this.y+80, 10, 15);
-    ctx.rect(this.x+250, this.y+80, 10, 15);
-    ctx.rect(this.x, this.y+90, 300, 10);
+    ctx.rect(this.x+52.5, this.y+80, 10, 15);
+    ctx.rect(this.x+252.5, this.y+80, 10, 15);
+    ctx.rect(this.x, this.y+90, 305, 10);
     ctx.rect(this.x, this.y+85, 10, 5);
-    ctx.rect(this.x+290, this.y+85, 10, 5);
+    ctx.rect(this.x+295, this.y+85, 10, 5);
     ctx.closePath();
     ctx.fillStyle = 'gold';
     ctx.fill();
@@ -162,11 +187,11 @@ function snow(amount){
 //Draws and moves elves
 function moveElves(){
   for(var i = 0; i < elvesArray.length; i++){
-    if(elvesArray[i].x > 120+(120*i) && elvesArray[i].y < canvas.height+40){
+    if(elvesArray[i].x > 120+(120*i) && elvesArray[i].y < canvas.height-40){
       elvesArray[i].y+=2;
     }
 
-    if(elvesArray[i].y < canvas.height+40){
+    if(elvesArray[i].y < canvas.height-40){
       elvesArray[i].x+=2;
     }
 
@@ -214,7 +239,7 @@ function moveSnow(index){
 //Adds snow to bottom of screen when snow exits bottom
 function accumulate(){
   var initHeight = 20,
-      accumRate = 2.5; //Decrease for faster accumulation
+      accumRate = 1.7; //Decrease for faster accumulation
     
   accumulation = accumAmount/accumRate;
 
@@ -330,30 +355,30 @@ function gravestone(x, name){
 function xmas(){
   //Speech bubble
   ctx.beginPath();
-  ctx.rect(550, canvas.height-213, 300, 45);
-  ctx.arc(550, canvas.height-190, 22.5, Math.PI*.5, Math.PI*1.5, false);
+  ctx.rect(525, canvas.height-213, 300, 45);
+  ctx.arc(525, canvas.height-190, 22.5, Math.PI*.5, Math.PI*1.5, false);
   ctx.closePath();
   ctx.fillStyle = 'white';
   ctx.fill();
 
   ctx.beginPath();
-  ctx.arc(850, canvas.height-190, 22.5, Math.PI*.5, Math.PI*1.5, true);
+  ctx.arc(825, canvas.height-190, 22.5, Math.PI*.5, Math.PI*1.5, true);
   ctx.closePath();
   ctx.fillStyle = 'white';
   ctx.fill();
 
   ctx.beginPath();
-  ctx.moveTo(580, canvas.height-170);
-  ctx.lineTo(585, canvas.height-125);
-  ctx.lineTo(595, canvas.height-170);
+  ctx.moveTo(575, canvas.height-170);
+  ctx.lineTo(580, canvas.height-125);
+  ctx.lineTo(590, canvas.height-170);
   ctx.closePath();
   ctx.fillStyle = 'white';
   ctx.fill();
 
   ctx.beginPath();
-  ctx.moveTo(795, canvas.height-170);
-  ctx.lineTo(790, canvas.height-125);
-  ctx.lineTo(780, canvas.height-170);
+  ctx.moveTo(772, canvas.height-170);
+  ctx.lineTo(767, canvas.height-125);
+  ctx.lineTo(757, canvas.height-170);
   ctx.closePath();
   ctx.fillStyle = 'white';
   ctx.fill();
@@ -361,7 +386,7 @@ function xmas(){
   //Text
   ctx.font = '30px Courgette';
   ctx.fillStyle = 'red';
-  ctx.fillText('Merry Christmas!', 580, canvas.height-180);
+  ctx.fillText('Merry Christmas!', 555, canvas.height-180);
 }
 
 //Fonts
@@ -383,13 +408,13 @@ function drawScene(){
 
   if(accumulation <= maxHeight){
     background('rgb(158, 206, 211)');
-    
+
     drawSnow();
     moveElves();
     drawSleigh();
     accumulate();
     
-    if(elvesArray[2].y >= canvas.height+40){
+    if(elvesArray[2].y >= canvas.height-40){
       xmas();
     }
   }else if(counter <= 150){
@@ -414,11 +439,11 @@ snow(100);
 var xSleigh = -330,
     ySleigh = 120;
 
-elvesArray[0] = new elf('red', xSleigh+40, ySleigh+127);
-elvesArray[1] = new elf('green', xSleigh+105, ySleigh+127);
-elvesArray[2] = new elf('blue', xSleigh+170, ySleigh+127);
+elvesArray[0] = new elf('red', xSleigh+40, ySleigh+63);
+elvesArray[1] = new elf('green', xSleigh+108, ySleigh+63);
+elvesArray[2] = new elf('blue', xSleigh+176, ySleigh+63);
 
-mySleigh = new sleigh(xSleigh, ySleigh);
+mySleigh = new sleigh(xSleigh-5, ySleigh);
 
 //Creates cloud
 var xCloud = 400,
