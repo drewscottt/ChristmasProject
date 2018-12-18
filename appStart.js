@@ -342,7 +342,7 @@ function gravestone(x, name){
 
   ctx.font = '20px Sanchez';
   ctx.fillStyle = 'black';
-  ctx.fillText('R.I.P', x+17, canvas.height-88);
+  ctx.fillText('R.I.P.', x+17, canvas.height-88);
 
   ctx.font = '15px Sanchez';
   ctx.fillText('12/25/18', x+7, canvas.height-71);
